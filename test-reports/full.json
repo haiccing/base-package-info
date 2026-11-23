@@ -1,8 +1,8 @@
 {
   "package": "haiccing/base-package-info",
-  "content": "0f64f775b0d4badb2ee72d2451e6786804646bd1b05cc983173fca76874c734b",
+  "content": "76837b8dd511250dae9881e7292f690edf56808d421388c70fb5e8ef9b35d25f",
   "bare": "v1.36.0",
-  "date": "2026-11-21T01:11:07.930Z",
+  "date": "2026-11-23T04:29:12.967Z",
   "set": "full",
   "ok": true,
   "units": [
@@ -14,8 +14,8 @@
         "total": 4
       },
       "asserts": {
-        "passed": 26,
-        "total": 26
+        "passed": 32,
+        "total": 32
       },
       "failures": []
     },
@@ -75,12 +75,25 @@
       "unit": "/test/modules/pear-full-square/mrepo-base-info",
       "ok": true,
       "tests": {
-        "passed": 9,
-        "total": 9
+        "passed": 10,
+        "total": 10
       },
       "asserts": {
-        "passed": 60,
-        "total": 60
+        "passed": 86,
+        "total": 86
+      },
+      "failures": []
+    },
+    {
+      "unit": "/test/modules/pear-full-square/mycelium-container-document",
+      "ok": true,
+      "tests": {
+        "passed": 1,
+        "total": 1
+      },
+      "asserts": {
+        "passed": 8,
+        "total": 8
       },
       "failures": []
     },
@@ -98,6 +111,32 @@
       "failures": []
     },
     {
+      "unit": "/test/modules/pear-full-square/mycelium-value-avro",
+      "ok": true,
+      "tests": {
+        "passed": 8,
+        "total": 8
+      },
+      "asserts": {
+        "passed": 57,
+        "total": 57
+      },
+      "failures": []
+    },
+    {
+      "unit": "/test/modules/pear-full-square/mycelium-value-json",
+      "ok": true,
+      "tests": {
+        "passed": 1,
+        "total": 1
+      },
+      "asserts": {
+        "passed": 3,
+        "total": 3
+      },
+      "failures": []
+    },
+    {
       "unit": "/test/modules/pear-full-square/pkgm-base-check",
       "ok": true,
       "tests": {
@@ -105,8 +144,8 @@
         "total": 23
       },
       "asserts": {
-        "passed": 69,
-        "total": 69
+        "passed": 70,
+        "total": 70
       },
       "failures": []
     }
