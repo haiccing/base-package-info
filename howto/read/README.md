@@ -8,19 +8,4 @@ answers about what is deployed in it.
 
 ## Steps
 
-```sh
-# the top page and the keywords below it
-haicc docs info/get
-# a page by its keywords, from the top
-haicc docs info/get haiccing/base-package-boot/deploy
-# a section of a page
-haicc docs info/get haiccing/base-docs-hdlc/validation
-# an organisation: its packages, each by its name
-haicc docs info/get haiccing
-# the same, as words
-haicc docs info/get haiccing base-package-boot deploy
-# an mrepo's own: what is deployed in it
-haicc host info/get
-# extracted again, from its packages as they are now
-haicc host info/extract
-```
+The script, [steps.haicc](steps.haicc): each line as typed after `haicc`, what it answers under it; run with `howto/run`, shown here at info extraction.

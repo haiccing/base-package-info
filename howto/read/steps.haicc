@@ -1,0 +1,24 @@
+# scene: the docs mrepo, and the host in service
+. boot/deploy docs haiccing/base-component-docs
+. boot/deploy host haiccing/base-component-haicc
+# step: the top page and the keywords below it
+docs info/get
+# expect: "keyword":"."
+# step: a page by its keywords, from the top
+docs info/get haiccing/base-package-boot/deploy
+# expect: "keyword":"haiccing/base-package-boot/deploy"
+# step: a section of a page
+docs info/get haiccing/base-docs-hdlc/validation
+# expect: "title":"Validation"
+# step: an organisation: its packages, each by its name
+docs info/get haiccing
+# expect: "keyword":"haiccing/base-package-boot"
+# step: the same, as words
+docs info/get haiccing base-package-boot deploy
+# expect: "keyword":"haiccing/base-package-boot/deploy"
+# step: an mrepo's own: what is deployed in it
+host info/get
+# expect: base-component-haicc
+# step: extracted again, from its packages as they are now
+host info/extract
+# expect: "changed":false
