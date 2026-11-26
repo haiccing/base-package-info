@@ -1,8 +1,8 @@
 {
   "package": "haiccing/base-package-info",
-  "content": "c7d18d99c1ed562bb8f65497a990728bade5ca97f0abb781cb72306736023ba9",
+  "content": "2342c3a10f1eee64a88abe7f26e9d35fc220f8eef7374c0dea22bfec45ab7b9e",
   "bare": "v1.36.0",
-  "date": "2026-11-25T08:58:46.214Z",
+  "date": "2026-11-26T23:16:10.958Z",
   "set": "full",
   "ok": true,
   "units": [
@@ -79,8 +79,8 @@
         "total": 11
       },
       "asserts": {
-        "passed": 92,
-        "total": 92
+        "passed": 94,
+        "total": 94
       },
       "failures": []
     },
@@ -166,12 +166,12 @@
       "unit": "/test/modules/pear-full-square/pkgm-base-check",
       "ok": true,
       "tests": {
-        "passed": 26,
-        "total": 26
+        "passed": 27,
+        "total": 27
       },
       "asserts": {
-        "passed": 90,
-        "total": 90
+        "passed": 94,
+        "total": 94
       },
       "failures": []
     }

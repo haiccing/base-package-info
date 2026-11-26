@@ -27,8 +27,8 @@ function execution (files = {}, dir = null) {
     runtime: { dir },
     read: async p => { if (!(abs(p) in files)) throw new Error(`nothing at ${p}`); return files[abs(p)] },
     find: async function (p) { try { return await this.read(p) } catch { return null } },
-    log: function (level, event, data = {}) { (this.entries ??= []).push({ level, event, ...data }) },
-    step: async function (event, data, fn, level = 'verbose') { const r = await fn(); (this.entries ??= []).push({ level, event, ...(typeof data === 'function' ? data(r) : data) }); return r },
+    log: function (level, event, line) { if (typeof line !== 'string') throw new Error('not a log entry: a line'); (this.entries ??= []).push({ level, event, line }) },
+    step: async function (event, line, fn, level = 'verbose') { const r = await fn(); (this.entries ??= []).push({ level, event, line: typeof line === 'function' ? line(r) : line }); return r },
     put: (p, bytes) => { writes.push(['put', abs(p)]); files[abs(p)] = Buffer.from(bytes) },
     remove: p => { writes.push(['remove', abs(p)]); delete files[abs(p)] }
   }
@@ -88,21 +88,23 @@ test('extract, then get, then clear: the layer from the packages, read by keywor
     const { exec, files, writes } = execution({ '/packages/manifest.json': B({ packages: { 'haiccing/base-package-one': {}, 'haiccing/base-component-two': {} } }) }, dir)
     await t.exception(act('get', exec, {}), /no info extracted in this mrepo yet \(info\/extract\)/, 'get before any extraction: said')
     const r = await act('extract', exec, { uri: ['.'] })
-    t.alike([r.changed, r.problems], [true, 0], 'extract: written, no problem')
+    t.ok(/^Extracted the info of 2 packages: \d+ keywords, \d+ pages\.\nThe info layer changed: \d+ put, 0 removed\.\nNo problems in its pages\.$/.test(r), `extract: written, no problem, said: ${r.split('\n')[0]}`)
+    const below = x => x.message.split('\n').filter(l => l.startsWith('- ')).map(l => l.slice(2).split(':')[0])
+    const first = x => x.message.split('\n')[0]
     t.ok(files['/info/index.json'] && files['/info/problems.json'] && files['/info/.layer.json'], 'the layer: its index, its problems, its config when it had none')
     t.ok(J(files['/info/index.json'])['modules/mrepo-base-one/external/go'], 'the module once, under modules')
     const n = writes.length
-    t.alike([(await act('extract', exec, { uri: ['.'] })).changed, writes.length], [false, n], 'again: nothing changed, nothing written')
+    t.alike([(await act('extract', exec, { uri: ['.'] })).split('\n')[1], writes.length], ['Nothing changed: the info layer as it was.', n], 'again: nothing changed, nothing written')
     await t.exception(act('extract', exec, { uri: ['main', 'x'] }), /info extract: the whole mrepo only/)
     const top = await act('get', exec, {})
-    t.alike([top.choices[0].title, top.choices[0].below.map(b => b.keyword)], ['base-component-two', ['haiccing', 'modules', 'third-party', 'schemas']], 'the top: the mrepo\'s own package, its organisation, the pages made here')
+    t.alike([top.attachments[0].name, below(top)], ['base-component-two', ['haiccing', 'modules', 'third-party', 'schemas']], 'the top: the mrepo\'s own package, its organisation, the pages made here')
     const org = await act('get', exec, { uri: ['main', 'haiccing'] })
-    t.alike(org.choices[0].below.map(b => b.keyword), ['haiccing/base-component-two', 'haiccing/base-package-one'], 'its organisation: its packages, each by its name fully qualified, the mrepo\'s own first')
+    t.alike(below(org), ['haiccing/base-component-two', 'haiccing/base-package-one'], 'its organisation: its packages, each by its name fully qualified, the mrepo\'s own first')
     const go = await act('get', exec, { uri: ['main', 'haiccing/base-package-one/go'] })
-    t.alike([go.choices[0].title, go.choices[0].oneliner], ['go', 'Goes.'], 'an action, reached by a jump into its module')
+    t.alike([go.attachments[0].name, first(go)], ['go', 'haiccing/base-package-one/go: Goes.'], 'an action, reached by a jump into its module')
     await t.exception(act('get', exec, { uri: ['main', 'haiccing/base-package-one/stop'] }), /no haiccing\/base-package-one\/stop here: nearest haiccing\/base-package-one, below it go/, 'not there: the nearest, and what is below it')
-    t.is((await act('get', exec, { uri: ['main', 'go'] })).context, 'haiccing/base-package-one', 'a short keyword: the package that has it, its context said')
-    t.ok((await act('clear', exec, { uri: ['.'] })).removed > 0, 'clear: the build removed')
+    t.is(first(await act('get', exec, { uri: ['main', 'go'] })), 'haiccing/base-package-one/go: Goes.', 'a short keyword: the package that has it, written in its context')
+    t.ok(/^Cleared the info layer's build: \d+ files removed\.$/.test(await act('clear', exec, { uri: ['.'] })), 'clear: the build removed, said')
     await t.exception(act('get', exec, {}), /no info extracted in this mrepo yet/, 'nothing to read after it')
   } finally { rmSync(dir, { recursive: true, force: true }) }
 })
