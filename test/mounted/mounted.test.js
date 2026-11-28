@@ -97,7 +97,7 @@ test('extract, then get, then clear: the layer from the packages, read by keywor
     t.alike([(await act('extract', exec, { uri: ['.'] })).split('\n')[1], writes.length], ['Nothing changed: the info layer as it was.', n], 'again: nothing changed, nothing written')
     await t.exception(act('extract', exec, { uri: ['main', 'x'] }), /info extract: the whole mrepo only/)
     const top = await act('get', exec, {})
-    t.alike([first(top).split(':')[0], below(top)], ['.', ['haiccing', 'modules', 'third-party', 'schemas']], 'the top: the mrepo\'s own package, its organisation, the pages made here')
+    t.alike([first(top).split(':')[0], below(top)], ['.', ['haiccing', 'modules', 'third-party']], 'the top: the mrepo\'s own package, its organisation, the pages made here')
     const org = await act('get', exec, { uri: ['main', 'haiccing'] })
     t.alike(below(org), ['haiccing/base-component-two', 'haiccing/base-package-one'], 'its organisation: its packages, each by its name fully qualified, the mrepo\'s own first')
     const go = await act('get', exec, { uri: ['main', 'haiccing/base-package-one/go'] })
